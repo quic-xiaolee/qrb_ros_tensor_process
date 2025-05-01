@@ -24,12 +24,18 @@ ament_auto_add_library(qrb_ros_yolo_process_component SHARED
   src/yolo_det_overlay_node.cpp
   src/yolo_seg_post_node.cpp
   src/yolo_seg_overlay_node.cpp
+  src/yolo_inference_node.cpp
 )
 # target_link_libraries(qrb_ros_yolo_process_component qrb_yolo_process)
 
 rclcpp_components_register_nodes(
   qrb_ros_yolo_process_component
   PLUGIN "qrb_ros::yolo_process::YoloPreProcessNode"
+)
+
+rclcpp_components_register_nodes(
+  qrb_ros_yolo_process_component
+  PLUGIN "qrb_ros::yolo_process::InferenceNode"
 )
 
 rclcpp_components_register_nodes(
