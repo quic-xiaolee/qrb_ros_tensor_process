@@ -97,9 +97,9 @@ void YoloSegPostProcessor::validate_input_params(const std::vector<Tensor> & ten
     if (tensor_bbox.shape[1] != tensor_score.shape[1] ||
         tensor_bbox.shape[1] != tensor_label.shape[1] ||
         tensor_bbox.shape[1] != tensor_mask.shape[2]) {
-      oss << "Inconsistent obj count, " << " tensor_bbox=" << tensor_bbox.shape[1]
-          << " tensor_score=" << tensor_score.shape[1] << " tensor_label=" << tensor_label.shape[1]
-          << " tensor_mask=" << tensor_mask.shape[2];
+      oss << "Inconsistent obj count, "
+          << " tensor_bbox=" << tensor_bbox.shape[1] << " tensor_score=" << tensor_score.shape[1]
+          << " tensor_label=" << tensor_label.shape[1] << " tensor_mask=" << tensor_mask.shape[2];
       break;
     }
     err = false;

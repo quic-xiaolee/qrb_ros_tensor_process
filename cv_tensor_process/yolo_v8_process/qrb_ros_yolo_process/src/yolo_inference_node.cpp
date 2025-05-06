@@ -27,7 +27,7 @@ InferenceNode::InferenceNode(const rclcpp::NodeOptions & options) : Node("infere
     throw std::runtime_error("Interpreter init failed");
   }
 
-  // print model input & output nformation
+  // print model input & output information
   {
     std::ostringstream oss_in;
     oss_in << "Output tensor info:" << std::endl;
@@ -139,9 +139,6 @@ void InferenceNode::process_and_publish(const custom_msg::TensorList::SharedPtr 
   //   custom_msg::TensorList::SharedPtr msg;
   auto msg_tensor_list = std::make_unique<custom_msg::TensorList>();
 
-  // fetch output tensor
-  int output_count = interpreter_->outputs().size();
-
   auto get_tensor_shape = [this](const TfLiteTensor * tensor) -> std::vector<uint32_t> {
     std::vector<uint32_t> shape;
     if (tensor && tensor->dims) {
@@ -155,11 +152,10 @@ void InferenceNode::process_and_publish(const custom_msg::TensorList::SharedPtr 
   };
 
   // traversal all output tensors
-  for (int i = 0; i < output_count; ++i) {
-    int tensor_index = interpreter_->outputs()[i];                     // get tensor index
-    const TfLiteTensor * tensor = interpreter_->tensor(tensor_index);  // get tensor ptr
+  for (int output_idx : interpreter_->outputs()) {
+    const TfLiteTensor * tensor = interpreter_->tensor(output_idx);  // get tensor ptr
     if (!tensor || !tensor->data.f) {
-      RCLCPP_ERROR_STREAM(this->get_logger(), "Failed to get output tensor");
+      RCLCPP_ERROR_STREAM(this->get_logger(), "Invalid output tensor, got null pointer");
       return;
     }
 
@@ -174,6 +170,7 @@ void InferenceNode::process_and_publish(const custom_msg::TensorList::SharedPtr 
     msg_tensor_list->tensor_list.push_back(std::move(msg_tensor));
   }
   msg_tensor_list->header = msg->header;
+
   pub_->publish(std::move(msg_tensor_list));
 }
 

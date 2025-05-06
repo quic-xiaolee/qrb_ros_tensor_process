@@ -95,8 +95,9 @@ void YoloDetPostProcessor::process(const std::vector<Tensor> & tensors,
     // obj count check
     if (tensor_bbox.shape[1] != tensor_score.shape[1] ||
         tensor_bbox.shape[1] != tensor_label.shape[1]) {
-      oss << "Inconsistent obj count, " << " tensor_bbox=" << tensor_bbox.shape[1]
-          << " tensor_score=" << tensor_score.shape[1] << " tensor_label=" << tensor_label.shape[1];
+      oss << "Inconsistent obj count, "
+          << " tensor_bbox=" << tensor_bbox.shape[1] << " tensor_score=" << tensor_score.shape[1]
+          << " tensor_label=" << tensor_label.shape[1];
       break;
     }
     err = false;
