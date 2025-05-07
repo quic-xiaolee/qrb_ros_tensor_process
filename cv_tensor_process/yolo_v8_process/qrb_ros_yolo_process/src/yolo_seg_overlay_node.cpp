@@ -28,7 +28,7 @@ YoloSegOverlayNode::YoloSegOverlayNode(const rclcpp::NodeOptions & options)
 
   if (resize_width_ <= 0 || resize_height_ <= 0) {
     throw std::invalid_argument(
-        "YoloSegOverlayNode: Invalid resize value: " + std::to_string(resize_width_) + "," +
+        "YoloDetOverlayNode: Invalid resize value: " + std::to_string(resize_width_) + "," +
         std::to_string(resize_height_));
   }
 
