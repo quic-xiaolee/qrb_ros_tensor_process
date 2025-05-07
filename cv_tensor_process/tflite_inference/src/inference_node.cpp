@@ -1,6 +1,6 @@
-#include <yolo_inference_node.hpp>
+#include <inference_node.hpp>
 
-namespace qrb_ros::yolo_process
+namespace qrb_ros::tflite_inference
 {
 
 InferenceNode::InferenceNode(const rclcpp::NodeOptions & options) : Node("inference_node", options)
@@ -174,7 +174,7 @@ void InferenceNode::process_and_publish(const custom_msg::TensorList::SharedPtr 
   pub_->publish(std::move(msg_tensor_list));
 }
 
-}  // namespace qrb_ros::yolo_process
+}  // namespace qrb_ros::tflite_inference
 
 #include "rclcpp_components/register_node_macro.hpp"
-RCLCPP_COMPONENTS_REGISTER_NODE(qrb_ros::yolo_process::InferenceNode)
+RCLCPP_COMPONENTS_REGISTER_NODE(qrb_ros::tflite_inference::InferenceNode)

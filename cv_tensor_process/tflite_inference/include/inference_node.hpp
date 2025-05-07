@@ -6,7 +6,7 @@
 #include "tensorflow/lite/model.h"
 #include "tensorflow/lite/tools/gen_op_registration.h"
 
-namespace qrb_ros::yolo_process
+namespace qrb_ros::tflite_inference
 {
 namespace custom_msg = qrb_ros_tensor_list_msgs::msg;
 
@@ -27,4 +27,4 @@ private:
   rclcpp::Subscription<custom_msg::TensorList>::SharedPtr sub_{ nullptr };
   rclcpp::Publisher<custom_msg::TensorList>::SharedPtr pub_{ nullptr };
 };
-}  // namespace qrb_ros::yolo_process
+}  // namespace qrb_ros::tflite_inference
