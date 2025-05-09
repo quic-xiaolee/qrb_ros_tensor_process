@@ -129,11 +129,11 @@ void YoloSegPostProcessNode::msg_callback(
   }
 
   // construct ros msg and publish
-  qrb_ros_vision_msgs::msg::Detection2DWithMaskArray pub_msg;
-  pub_msg.header = msg->header;
-  populate_pub_msg(pub_msg, instances);
+  auto pub_msg = std::make_unique<qrb_ros_vision_msgs::msg::Detection2DWithMaskArray>();
+  pub_msg->header = msg->header;
+  populate_pub_msg(*pub_msg, instances);
 
-  pub_->publish(pub_msg);
+  pub_->publish(std::move(pub_msg));
   RCLCPP_DEBUG(this->get_logger(), "<<< YOLO SEG post-process end");
 }
 

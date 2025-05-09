@@ -115,11 +115,11 @@ void YoloDetPostProcessNode::msg_callback(const custom_msg::TensorList::SharedPt
   }
 
   // construct ros msg and publish
-  vision_msgs::msg::Detection2DArray det_2d_arr;
-  det_2d_arr.header.stamp = msg->header.stamp;
-  populate_pub_msg(det_2d_arr, instances);
+  auto det_2d_arr = std::make_unique<vision_msgs::msg::Detection2DArray>();
+  det_2d_arr->header.stamp = msg->header.stamp;
+  populate_pub_msg(*det_2d_arr, instances);
 
-  pub_->publish(det_2d_arr);
+  pub_->publish(std::move(det_2d_arr));
   RCLCPP_DEBUG(this->get_logger(), ">>> YOLO DET post-process end");
 }
 
