@@ -32,14 +32,50 @@ std::size_t get_size_of_type(TensorDataType dtype);
 /**
  * \brief struct to describe a tensor
  */
-struct Tensor
+struct TensorSpec
+{
+  std::string name;
+  TensorDataType dtype;
+  std::vector<uint32_t> shape;
+};
+
+struct Tensor : public TensorSpec
 {
   std::vector<uint8_t> * p_vec;  // pointer to vector that stores tensor byte stream
-  std::vector<uint32_t> shape;   // shape of tensor
-  std::string name;              // name of tensor
-  TensorDataType dtype;          // data type of tensor
+  // Constructor to initialize both TensorSpec and p_vec
+  Tensor(const TensorSpec & spec, std::vector<uint8_t> * data_ptr)
+    : TensorSpec(spec), p_vec(data_ptr)
+  {
+  }
+
+  Tensor() : p_vec(nullptr) {}
+
+  // Constructor to initialize TensorSpec and p_vec
+  Tensor(const std::string & name,
+      TensorDataType dtype,
+      const std::vector<uint32_t> & shape,
+      std::vector<uint8_t> * data_ptr)
+    : TensorSpec{ name, dtype, shape }, p_vec(data_ptr)
+  {
+  }
 };
-std::string get_tensor_shape_str(const Tensor & tensor);
+
+/**
+ * \brief Validates a list of tensors against their expected specifications.
+ *
+ * This function checks whether the provided tensors match the expected specifications
+ * in terms of data type and shape. If any mismatch is found, an exception is thrown
+ * with a detailed error message.
+ *
+ * \param tensors A vector of Tensor objects to validate.
+ * \param specs A vector of TensorSpec objects specifying the expected properties of the tensors.
+ *
+ * \throws std::invalid_argument If the number of tensors does not match the number of
+ * specifications, or if any tensor's data type or shape does not match the expected specification.
+ */
+void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<TensorSpec> & specs);
+
+std::string get_tensor_shape_str(const TensorSpec & tensor);
 
 /**
  * \brief YOLO instance info structure

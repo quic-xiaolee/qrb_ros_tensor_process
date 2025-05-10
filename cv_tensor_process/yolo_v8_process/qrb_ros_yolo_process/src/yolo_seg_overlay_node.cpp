@@ -100,7 +100,7 @@ void YoloSegOverlayNode::draw_inplace(std::vector<YoloInstance> & detections, cv
 void YoloSegOverlayNode::msg_callback(sensor_msgs::msg::Image::ConstSharedPtr img_msg,
     qrb_ros_vision_msgs::msg::Detection2DWithMaskArray::ConstSharedPtr yolo_msg)
 {
-  RCLCPP_DEBUG(this->get_logger(), ">>> YOLO SEG overlay begin");
+  RCLCPP_INFO(this->get_logger(), ">>> YOLO SEG overlay begin");
   if (img_msg->width != resize_width_ || img_msg->height != resize_height_) {
     RCLCPP_ERROR(this->get_logger(), "Image size mismatch: expect %dx%d but got %dx%d",
         resize_width_, resize_height_, img_msg->width, img_msg->height);
@@ -108,7 +108,7 @@ void YoloSegOverlayNode::msg_callback(sensor_msgs::msg::Image::ConstSharedPtr im
   }
 
   if (yolo_msg->array.empty()) {
-    RCLCPP_DEBUG(this->get_logger(), ">>> YOLO SEG overlay end, no detection");
+    RCLCPP_INFO(this->get_logger(), ">>> YOLO SEG overlay end, no detection");
     pub_->publish(*img_msg);
     return;
   }
@@ -138,7 +138,7 @@ void YoloSegOverlayNode::msg_callback(sensor_msgs::msg::Image::ConstSharedPtr im
 
   draw_inplace(instances, cv_ptr->image);
   pub_->publish(*(cv_ptr->toImageMsg()));
-  RCLCPP_DEBUG(this->get_logger(), ">>> YOLO SEG overlay end");
+  RCLCPP_INFO(this->get_logger(), ">>> YOLO SEG overlay end");
 }
 
 }  // namespace qrb_ros::yolo_process
