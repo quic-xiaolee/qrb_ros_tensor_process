@@ -48,6 +48,41 @@ int make_cvtype(TensorDataType dtype, int channel)
   return cvType;
 }
 
+void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<TensorSpec> & specs)
+{
+  bool is_valid = true;
+  std::ostringstream oss;
+  if (tensors.size() != specs.size()) {
+    oss << "Expected " << specs.size() << " tensors, but got " << tensors.size();
+    throw std::invalid_argument(oss.str());
+  }
+
+  for (size_t i = 0; i < specs.size(); ++i) {
+    const Tensor & tensor = tensors[i];
+    const TensorSpec & spec = specs[i];
+
+    // Check data type
+    if (tensor.dtype != spec.dtype) {
+      oss << "Tensor dtype mismatch for tensor " << i << " (" << tensor.name << "): expected "
+          << static_cast<int>(spec.dtype) << ", but got " << static_cast<int>(tensor.dtype);
+      is_valid = false;
+      break;
+    }
+
+    // Check shape
+    if (tensor.shape != spec.shape) {
+      std::ostringstream oss;
+      oss << "Tensor shape mismatch for tensor " << i << " (" << tensor.name << "): expected "
+          << spec.shape.size() << " dimensions, but got " << tensor.shape.size();
+      is_valid = false;
+      break;
+    }
+  }
+  if (!is_valid) {
+    throw std::invalid_argument(oss.str());
+  }
+}
+
 std::string get_tensor_shape_str(const Tensor & tensor)
 {
   std::ostringstream oss;

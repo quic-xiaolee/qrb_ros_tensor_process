@@ -45,66 +45,14 @@ YoloSegPostProcessor::YoloSegPostProcessor(const std::string & label_file,
 
 void YoloSegPostProcessor::validate_input_params(const std::vector<Tensor> & tensors)
 {
-  std::ostringstream oss;
-
-  if (tensors.size() != 5) {
-    oss << "Expect 5 tensors, but got: " << tensors.size();
-    throw std::invalid_argument(oss.str());
-  }
-
-  const Tensor & tensor_bbox = tensors[0];
-  const Tensor & tensor_score = tensors[1];
-  const Tensor & tensor_mask = tensors[2];
-  const Tensor & tensor_label = tensors[3];
-  const Tensor & tensor_proto = tensors[4];
-
-  auto log_all_tensor_shapes = [&]() {
-    oss << "Invalide tensor shape:";
-    oss << "tensor_bbox: " << get_tensor_shape_str(tensor_bbox) << ", "
-        << "tensor_score: " << get_tensor_shape_str(tensor_score) << ", "
-        << "tensor_label: " << get_tensor_shape_str(tensor_label) << ", "
-        << "tensor_mask: " << get_tensor_shape_str(tensor_mask) << ", "
-        << "tensor_proto: " << get_tensor_shape_str(tensor_proto) << ". ";
-  };
-
-  bool err = true;
-  do {
-    // tensor_bbox shape check
-    if (tensor_bbox.shape[0] != 1 || tensor_bbox.shape[2] != 4 ||
-        tensor_bbox.dtype != TensorDataType::FLOAT32)
-      break;
-
-    // tensor_score shape check
-    if (tensor_score.shape[0] != 1 || tensor_score.dtype != TensorDataType::FLOAT32)
-      break;
-
-    // tensor_label shape check
-    if (tensor_label.shape[0] != 1 || tensor_label.dtype != TensorDataType::FLOAT32)
-      break;
-
-    // tensor_mask shape check
-    if (tensor_mask.shape[0] != 1 || tensor_mask.shape[2] != 32 ||
-        tensor_mask.dtype != TensorDataType::FLOAT32)
-      break;
-
-    // tensor_proto shape check
-    if (tensor_proto.shape[0] != 1 || tensor_proto.shape[1] != 32 || tensor_proto.shape[2] != 160 ||
-        tensor_proto.shape[3] != 160 || tensor_proto.dtype != TensorDataType::FLOAT32)
-      break;
-
-    // obj count check
-    if (tensor_bbox.shape[1] != tensor_score.shape[1] ||
-        tensor_bbox.shape[1] != tensor_label.shape[1] ||
-        tensor_bbox.shape[1] != tensor_mask.shape[1])
-      break;
-
-    err = false;
-  } while (0);
-
-  if (err) {
-    log_all_tensor_shapes();
-    throw std::invalid_argument(oss.str());
-  }
+  // std::vector<TensorSpec> specs = {
+  //   { TensorDataType::FLOAT32, 1, 4 },   // bbox
+  //   { TensorDataType::FLOAT32, 1, 1 },   // score
+  //   { TensorDataType::FLOAT32, 1, 32 },  // mask
+  //   { TensorDataType::FLOAT32, 1, 1 },   // label
+  //   { TensorDataType::FLOAT32, 1, 32 }   // proto-mask
+  // };
+  // validate_tensors(tensors, specs);
 }
 
 void YoloSegPostProcessor::non_maximum_suppression(const std::vector<Tensor> & tensors,

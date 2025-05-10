@@ -58,6 +58,9 @@ void YoloSegPostProcessNode::populate_tensor_from_msg(const custom_msg::TensorLi
     tensor.shape = msg->tensor_list[i].shape;
     tensor.p_vec = &msg->tensor_list[i].data;
     tensor.dtype = qrb::yolo_process::TensorDataType::FLOAT32;
+    // qrb::yolo_process::Tensor tensor(msg->tensor_list[i].name,
+    //     qrb::yolo_process::TensorDataType::FLOAT32, msg->tensor_list[i].shape,
+    //     &msg->tensor_list[i].data);
 
     tensors.push_back(std::move(tensor));
   }
