@@ -41,18 +41,15 @@ YoloSegPostProcessor::YoloSegPostProcessor(const std::string & label_file,
     std::cerr << "YAML Exception: " << e.what() << std::endl;
     label_map_.clear();
   }
-}
 
-void YoloSegPostProcessor::validate_input_params(const std::vector<Tensor> & tensors)
-{
-  // std::vector<TensorSpec> specs = {
-  //   { TensorDataType::FLOAT32, 1, 4 },   // bbox
-  //   { TensorDataType::FLOAT32, 1, 1 },   // score
-  //   { TensorDataType::FLOAT32, 1, 32 },  // mask
-  //   { TensorDataType::FLOAT32, 1, 1 },   // label
-  //   { TensorDataType::FLOAT32, 1, 32 }   // proto-mask
-  // };
-  // validate_tensors(tensors, specs);
+  // init tensor specs
+  tensor_specs_ = {
+    { "boxes", TensorDataType::FLOAT32, { 1, 8400, 4 } },
+    { "scores", TensorDataType::FLOAT32, { 1, 8400 } },
+    { "masks", TensorDataType::FLOAT32, { 1, 8400, 32 } },
+    { "class_idx", TensorDataType::FLOAT32, { 1, 8400 } },
+    { "protos", TensorDataType::FLOAT32, { 1, 32, 160, 160 } },
+  };
 }
 
 void YoloSegPostProcessor::non_maximum_suppression(const std::vector<Tensor> & tensors,
@@ -184,7 +181,7 @@ void YoloSegPostProcessor::process_mask(const std::vector<std::vector<float>> & 
 void YoloSegPostProcessor::process(const std::vector<Tensor> & tensors,
     std::vector<YoloInstance> & instances)
 {
-  validate_input_params(tensors);
+  validate_tensors(tensors, tensor_specs_);
   std::vector<int> indices;
   // The non_maximum_suppression function modifies the 'indices' vector to store the final selected
   // indices.

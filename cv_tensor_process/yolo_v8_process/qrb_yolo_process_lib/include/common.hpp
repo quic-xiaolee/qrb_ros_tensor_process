@@ -60,7 +60,21 @@ struct Tensor : public TensorSpec
   }
 };
 
+/**
+ * \brief Validates a list of tensors against their expected specifications.
+ *
+ * This function checks whether the provided tensors match the expected specifications
+ * in terms of data type and shape. If any mismatch is found, an exception is thrown
+ * with a detailed error message.
+ *
+ * \param tensors A vector of Tensor objects to validate.
+ * \param specs A vector of TensorSpec objects specifying the expected properties of the tensors.
+ *
+ * \throws std::invalid_argument If the number of tensors does not match the number of
+ * specifications, or if any tensor's data type or shape does not match the expected specification.
+ */
 void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<TensorSpec> & specs);
+
 std::string get_tensor_shape_str(const Tensor & tensor);
 
 /**
