@@ -75,7 +75,7 @@ struct Tensor : public TensorSpec
  */
 void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<TensorSpec> & specs);
 
-std::string get_tensor_shape_str(const Tensor & tensor);
+std::string get_tensor_shape_str(const TensorSpec & tensor);
 
 /**
  * \brief YOLO instance info structure

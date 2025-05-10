@@ -24,6 +24,22 @@ std::size_t get_size_of_type(TensorDataType dtype)
   }
 }
 
+std::string tensor_dtype_to_string(TensorDataType dtype)
+{
+  switch (dtype) {
+    case TensorDataType::INT8:
+      return "INT8";
+    case TensorDataType::UINT8:
+      return "UINT8";
+    case TensorDataType::FLOAT32:
+      return "FLOAT32";
+    case TensorDataType::FLOAT64:
+      return "FLOAT64";
+    default:
+      return "UNKNOWN";
+  }
+}
+
 int make_cvtype(TensorDataType dtype, int channel)
 {
   int cvType;
@@ -62,18 +78,10 @@ void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<Ten
     const TensorSpec & spec = specs[i];
 
     // Check data type
-    if (tensor.dtype != spec.dtype) {
-      oss << "Tensor dtype mismatch for tensor " << i << " (" << tensor.name << "): expected "
-          << static_cast<int>(spec.dtype) << ", but got " << static_cast<int>(tensor.dtype);
-      is_valid = false;
-      break;
-    }
-
-    // Check shape
-    if (tensor.shape != spec.shape) {
-      std::ostringstream oss;
-      oss << "Tensor shape mismatch for tensor " << i << " (" << tensor.name << "): expected "
-          << spec.shape.size() << " dimensions, but got " << tensor.shape.size();
+    if (tensor.dtype != spec.dtype || tensor.shape != spec.shape) {
+      oss << "Tensor spec mismatch,"
+          << " expected " << get_tensor_shape_str(spec) << ", but got "
+          << get_tensor_shape_str(tensor);
       is_valid = false;
       break;
     }
@@ -83,17 +91,16 @@ void validate_tensors(const std::vector<Tensor> & tensors, const std::vector<Ten
   }
 }
 
-std::string get_tensor_shape_str(const Tensor & tensor)
+std::string get_tensor_shape_str(const TensorSpec & spec)
 {
   std::ostringstream oss;
-  oss << tensor.name << ": dtype=" << static_cast<int>(tensor.dtype) << ", shape=[";
+  oss << "<" << spec.name << ">:" << tensor_dtype_to_string(spec.dtype) << "[";
 
-  for (size_t i = 0; i < tensor.shape.size(); ++i) {
-    oss << tensor.shape[i];
+  for (size_t i = 0; i < spec.shape.size(); ++i) {
+    oss << spec.shape[i];
     oss << ",";
   }
   oss << "]";
-  std::cout << oss.str() << std::endl;
   return oss.str();
 }
 
