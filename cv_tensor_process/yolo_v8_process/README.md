@@ -282,13 +282,13 @@ python -m venv venv_qaihub
 source venv_qaihub/bin/activate
  
 ## install qai-hub related python packages
-pip install qai-hub
+pip install qai-hub==0.31.0
 
 ## configure qai-hub token, replace xxx with your own token got from qaihub page.
 qai-hub configure --api_token xxx
 
-pip install "qai-hub-models[yolov8_det]"
-pip install "qai-hub-models[yolov8_seg]"
+pip install qai-hub-models[yolov8_det]==0.31.0
+pip install qai-hub-models[yolov8_seg]==0.31.0
 ```
 
 
